@@ -3255,6 +3255,32 @@
         "description": "This layer visualizes directions",
         "name": "Direction visualization"
     },
+    "doctors": {
+        "name": "doctors",
+        "tagRenderings": {
+            "specialty": {
+                "mappings": {
+                    "0": {
+                        "then": "This is a general practitioner"
+                    },
+                    "1": {
+                        "then": "This is a gynaecologist"
+                    },
+                    "2": {
+                        "then": "This is a psychiatrist"
+                    },
+                    "3": {
+                        "then": "This is a paediatrician"
+                    }
+                },
+                "question": "What is this doctor specialized in?",
+                "render": "This doctor is specialized in {healthcare:speciality}"
+            }
+        },
+        "title": {
+            "render": "Doctors Office {name}"
+        }
+    },
     "dogpark": {
         "name": "dog parks",
         "presets": {

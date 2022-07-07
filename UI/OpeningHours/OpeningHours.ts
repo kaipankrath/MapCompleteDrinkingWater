@@ -476,10 +476,11 @@ export class OH {
         return new opening_hours(textToParse, {
             lat: tags._lat,
             lon: tags._lon,
-            address: {
+            address: { 
+                state:undefined,
                 country_code: tags._country.toLowerCase()
             },
-        }, {tag_key: "opening_hours"});
+        }, <any>{tag_key: "opening_hours"});
     }
     
     /*

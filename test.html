@@ -21,24 +21,9 @@
 
 <div id="maindiv">'maindiv' not attached</div>
 <div id="extradiv">'extradiv' not attached</div>
-
+<canvas id="myChart" width="400" height="400"></canvas>
 <script src="./test.ts"></script>
 
-<script>
-    window.addEventListener('load', () => {
-        if ('serviceWorker' in navigator) {
-            // register service worker
-            navigator.serviceWorker.register('/service-worker.js').then(
-                () => {
-                    console.log('SW registration successful');
-                },
-                err => {
-                    console.error('SW registration failed', err)
-                });
-        } else {
-            console.error("Service workers are not supported")
-        }
-    });
-</script>
+
 </body>
 </html>

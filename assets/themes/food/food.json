@@ -28,6 +28,28 @@
   "startZoom": 1,
   "widenFactor": 3,
   "layers": [
-    "food"
+    "food",
+    {
+      "builtin" : "current_view",
+      "override" : {
+        "mapRendering" : [
+          {
+            "location" : [
+              "point"
+            ]
+            ,
+            "icon" : "statistics:black"
+          }
+        ],
+        "tagRenderings" : [
+          {
+            "render" : {
+              "en" : "Hello food"
+            },
+            "id" : "food_ctrl"
+          }
+        ]
+      }
+    }
   ]
 }

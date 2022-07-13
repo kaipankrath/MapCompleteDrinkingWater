@@ -10,9 +10,14 @@ var foodLayer = AllKnownLayouts.AllPublicLayers().find(x => x.id == "food");
 // console.log(foodLayer);
 // var wheelchairTagrendering  = foodLayer.tagRenderings.find(x=>x.id == "")
 
+var labels : any[] = [];
+var datas : Number[] = [];
+
+var keyword = 'wheelchair';
+const statistics: any = {};
+
 for (const tagrendering of foodLayer.tagRenderings) {
     var known = data.features.filter(x =>  tagrendering.IsKnown(x.properties))
-    var statistics  = [];
     for (const item of known) {
         if(tagrendering.mappings == undefined)
             continue;
@@ -21,27 +26,45 @@ for (const tagrendering of foodLayer.tagRenderings) {
             if(mapping.if.matchesProperties(item.properties))
             {
                 var key = mapping.then.textFor("en");
-                if(statistics[key] == undefined) statistics[key] = [];
-                if(statistics[key][item.properties[key]] == undefined) statistics[key][item.properties[key]] = 0;
-                statistics[key][item.properties[key]] ++;
+                if(statistics.key == undefined) {
+                    statistics.key = key;
+                    statistics.count = 0;
+                }
+                if(item.properties[keyword] != undefined)
+                {
+                    if(statistics[keyword] == undefined)
+                    statistics[keyword] = {}
+                    if( statistics[keyword][item.properties[keyword]] == undefined) 
+                        statistics[keyword][item.properties[keyword]] = 0;
+
+                    statistics[keyword][item.properties[keyword]]++;
+                }
+                
+
+                statistics.count++;
             }
         }
     }
-    console.log(statistics);
-   
-    
 }
 
+
+if(statistics.count > 0){
+    // labels.push(statistics.key);
+    if(statistics['wheelchair'] != undefined && statistics['wheelchair'] != null){
+        labels = Object.keys(statistics['wheelchair']) as Array<keyof typeof statistics>
+        datas = Object.keys(statistics['wheelchair']).map(key => statistics['wheelchair'][key]);
+    }
+}
 
 
 const ctx:any = document.getElementById('myChart');
 const myChart = new Chart(ctx, {
-    type: 'bar',
+    type: 'pie',
     data: {
-        labels: ['Red', 'Blue', 'Yellow', 'Green', 'Purple', 'Orange'],
+        labels: labels,
         datasets: [{
             label: '# of Votes',
-            data: [12, 19, 3, 5, 2, 3],
+            data: datas,
             backgroundColor: [
                 'rgba(255, 99, 132, 0.2)',
                 'rgba(54, 162, 235, 0.2)',

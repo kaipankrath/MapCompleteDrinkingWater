@@ -12,11 +12,12 @@ var foodLayer = AllKnownLayouts.AllPublicLayers().find(x => x.id == "food");
 
 var labels : any[] = [];
 var datas : Number[] = [];
-
 var keyword = 'wheelchair';
-const statistics: any = {};
+
 
 for (const tagrendering of foodLayer.tagRenderings) {
+    const statistics: any = {};
+    console.log(tagrendering);
     var known = data.features.filter(x =>  tagrendering.IsKnown(x.properties))
     for (const item of known) {
         if(tagrendering.mappings == undefined)
@@ -45,16 +46,18 @@ for (const tagrendering of foodLayer.tagRenderings) {
             }
         }
     }
-}
 
-
-if(statistics.count > 0){
-    // labels.push(statistics.key);
-    if(statistics['wheelchair'] != undefined && statistics['wheelchair'] != null){
-        labels = Object.keys(statistics['wheelchair']) as Array<keyof typeof statistics>
-        datas = Object.keys(statistics['wheelchair']).map(key => statistics['wheelchair'][key]);
+    if(statistics.count > 0){
+        // labels.push(statistics.key);
+        if(statistics[keyword] != undefined && statistics[keyword] != null){
+            labels = Object.keys(statistics[keyword]) as Array<keyof typeof statistics>
+            datas = Object.keys(statistics[keyword]).map(key => statistics[keyword][key]);
+        }
     }
 }
+
+
+
 
 
 const ctx:any = document.getElementById('myChart');

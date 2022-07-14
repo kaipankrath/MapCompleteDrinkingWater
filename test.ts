@@ -16,6 +16,8 @@ for (const tagrendering of foodLayer.tagRenderings) {
     const statistics: any = {};
     console.log(tagrendering);
     var known = data.features.filter(x =>  tagrendering.IsKnown(x.properties))
+    
+
     for (const item of known) {
         if(tagrendering.mappings == undefined)
             continue;
@@ -34,9 +36,12 @@ for (const tagrendering of foodLayer.tagRenderings) {
             }
         }
     }
+
+
     if(statistics[key] != null && statistics[key] > 0)
     {
         createNewGraph(Object.keys(statistics), Object.keys(statistics).map(key => statistics[key]), tagrendering?.question?.textFor("en"))
+        createNewGraph(['Known', 'Unknown'], [known.length, data.features.length], tagrendering?.question?.textFor("en"))
     }
 
 }

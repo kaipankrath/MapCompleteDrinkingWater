@@ -7,15 +7,12 @@ Chart.register(...registerables);
 
 
 var foodLayer = AllKnownLayouts.AllPublicLayers().find(x => x.id == "food");
-// console.log(foodLayer);
-// var wheelchairTagrendering  = foodLayer.tagRenderings.find(x=>x.id == "")
-
-var labels : any[] = [];
-var datas : Number[] = [];
-var keyword = 'wheelchair';
-
 
 for (const tagrendering of foodLayer.tagRenderings) {
+    
+    var keyword = tagrendering.freeform?.key;
+    console.log(keyword)
+
     const statistics: any = {};
     console.log(tagrendering);
     var known = data.features.filter(x =>  tagrendering.IsKnown(x.properties))
@@ -26,36 +23,20 @@ for (const tagrendering of foodLayer.tagRenderings) {
 
             if(mapping.if.matchesProperties(item.properties))
             {
+
                 var key = mapping.then.textFor("en");
-                if(statistics.key == undefined) {
-                    statistics.key = key;
-                    statistics.count = 0;
+                if(statistics[key] == undefined) {
+                    statistics[key] = 0;
+                    // statistics.count = 0;
                 }
-                if(item.properties[keyword] != undefined)
-                {
-                    if(statistics[keyword] == undefined)
-                    statistics[keyword] = {}
-                    if( statistics[keyword][item.properties[keyword]] == undefined) 
-                        statistics[keyword][item.properties[keyword]] = 0;
 
-                    statistics[keyword][item.properties[keyword]]++;
-                }
-                
-
-                statistics.count++;
+                statistics[key]++;
             }
         }
     }
 
-    if(statistics.count > 0){
-        // labels.push(statistics.key);
-        if(statistics[keyword] != undefined && statistics[keyword] != null){
-            labels = Object.keys(statistics[keyword]) as Array<keyof typeof statistics>
-            datas = Object.keys(statistics[keyword]).map(key => statistics[keyword][key]);
-            createNewGraph(labels, datas,statistics.key);
-        }
-        //creating new chart : pie 
-    }
+    createNewGraph(Object.keys(statistics), Object.keys(statistics).map(key => statistics[key]), tagrendering?.question?.textFor("en"))
+
 }
 
 
@@ -65,6 +46,7 @@ function createNewGraph(labels, datas,_title)
     container.style.width = "200px";
     container.style.height = "200px";
     container.style.margin = "10px";
+    container.style.float = "left";
     var mycanvas:any = document.createElement("canvas");
     
     const myChart = new Chart(mycanvas, {
@@ -102,7 +84,7 @@ function createNewGraph(labels, datas,_title)
             plugins: {
                 title: {
                     display: true,
-                    text: _title,
+                    text: stringToHTML(_title),
                     padding: {
                         top: 10,
                         bottom: 30
@@ -114,6 +96,11 @@ function createNewGraph(labels, datas,_title)
     container.appendChild(mycanvas);
     document.getElementById("maindiv").appendChild(container);
 }
+function stringToHTML(str) {
+	var parser = new DOMParser();
+	var doc = parser.parseFromString(str, 'text/html');
+	return doc.body.innerText;
+};
 
 
 

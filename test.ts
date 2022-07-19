@@ -8,10 +8,19 @@ Chart.register(...registerables);
 
 var foodLayer = AllKnownLayouts.AllPublicLayers().find(x => x.id == "food");
 
+var freeformStats:any = {}
+
 for (const tagrendering of foodLayer.tagRenderings) {
     
     var keyword = tagrendering.freeform?.key;
-    console.log(keyword)
+    if(keyword != undefined)
+       {
+            if(freeformStats[keyword] == undefined)
+            {
+                freeformStats[keyword] = 0;
+            }
+            freeformStats[keyword]++;
+       }
 
     const statistics: any = {};
     console.log(tagrendering);
@@ -21,12 +30,29 @@ for (const tagrendering of foodLayer.tagRenderings) {
     for (const item of known) {
         if(tagrendering.mappings == undefined)
             continue;
+        
+            // if(tagrendering.freeform != undefined){
+            //     console.log(tagrendering.freeform?.key);
+
+            // }
+
+            var keyword = tagrendering.freeform?.key;
+            if(keyword != undefined)
+            {
+                    if(freeformStats[keyword] == undefined)
+                    {
+                        freeformStats[keyword] = 0;
+                    }
+                    freeformStats[keyword]++;
+            }
+                
         for (const mapping of tagrendering.mappings) {
 
             if(mapping.if.matchesProperties(item.properties))
             {
 
                 var key = mapping.then.textFor("en");
+                console.log()
                 if(statistics[key] == undefined) {
                     statistics[key] = 0;
                     // statistics.count = 0;
@@ -35,16 +61,22 @@ for (const tagrendering of foodLayer.tagRenderings) {
                 statistics[key]++;
             }
         }
+
+        
     }
 
 
-    if(statistics[key] != null && statistics[key] > 0)
+    if(statistics[key] != undefined && statistics[key] > 0)
     {
         createNewGraph(Object.keys(statistics), Object.keys(statistics).map(key => statistics[key]), tagrendering?.question?.textFor("en"))
         createNewGraph(['Known', 'Unknown'], [known.length, data.features.length], tagrendering?.question?.textFor("en"))
     }
 
 }
+
+//create freeform keyword chart 
+createNewGraph(Object.keys(freeformStats), Object.keys(freeformStats).map(key => freeformStats[key]), "Summary ")
+
 
 
 function createNewGraph(labels, datas,_title)

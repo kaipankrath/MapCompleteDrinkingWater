@@ -1,52 +1,32 @@
-import * as shops from "./assets/generated/layers/shops.json"
+import { max } from "moment";
+import { Store, UIEventSource } from "./Logic/UIEventSource"
 import Combine from "./UI/Base/Combine";
-import Img from "./UI/Base/Img";
-import BaseUIElement from "./UI/BaseUIElement";
-import {VariableUiElement} from "./UI/Base/VariableUIElement";
-import LanguagePicker from "./UI/LanguagePicker";
-import TagRenderingConfig, {Mapping} from "./Models/ThemeConfig/TagRenderingConfig";
-import {MappingConfigJson} from "./Models/ThemeConfig/Json/QuestionableTagRenderingConfigJson";
-import {FixedUiElement} from "./UI/Base/FixedUiElement";
-import {TagsFilter} from "./Logic/Tags/TagsFilter";
-import {SearchablePillsSelector} from "./UI/Input/SearchableMappingsSelector";
-import {UIEventSource} from "./Logic/UIEventSource";
+import { FixedUiElement } from "./UI/Base/FixedUiElement";
+import { VariableUiElement } from "./UI/Base/VariableUIElement";
+import { FixedInputElement } from "./UI/Input/FixedInputElement";
+import Slider from "./UI/Input/Slider";
+import Toggle, { ClickableToggle } from "./UI/Input/Toggle";
 
-const mappingsRaw: MappingConfigJson[] = <any>shops.tagRenderings.find(tr => tr.id == "shop_types").mappings
-const mappings = mappingsRaw.map((m, i) => TagRenderingConfig.ExtractMapping(m, i, "test", "test"))
+const testData = ["-1", "0", "0.5", "1", "1.5", "2"]
+let slider = new Slider(0, testData.length - 1, {vertical: true});
 
-function fromMapping(m: Mapping): { show: BaseUIElement, value: TagsFilter, mainTerm: Record<string, string>, searchTerms?: Record<string, string[]> } {
-    const el: BaseUIElement = m.then
-    let icon: BaseUIElement
-    if (m.icon !== undefined) {
-        icon = new Img(m.icon).SetClass("h-8 w-8 pr-2")
-    } else {
-        icon = new FixedUiElement("").SetClass("h-8 w-1")
+slider.SetClass("flex m-1 elevatorslider mb-0 mt-8").SetStyle("height: "+2.5*testData.length+"rem ")
+
+const toggleClass = "flex border-2 border-blue-500 w-10 h-10 place-content-center items-center"
+
+const values = testData.map((data, i) => new ClickableToggle(
+  new FixedUiElement(data).SetClass("active bg-subtle " + toggleClass), new FixedUiElement(data).SetClass(toggleClass), slider.GetValue().sync(
+    (sliderVal) => {
+      return sliderVal === i
+    },
+    [],
+    (isSelected) => {
+      return isSelected ? i : slider.GetValue().data
     }
-    const show = new Combine([
-        icon,
-        el.SetClass("block-ruby")
-    ]).SetClass("flex items-center")
+  ))
+  .ToggleOnClick()
+  .SetClass("flex flex-column ml-5 bg-slate-200 w-10 h-10 valuesContainer"))
 
-    return {show, mainTerm: m.then.translations, searchTerms: m.searchTerms, value: m.if};
+const valCombine = new Combine(values.reverse())
 
-}
-const search = new UIEventSource("")
-const sp = new SearchablePillsSelector(
-    mappings.map(m => fromMapping(m)),
-    {
-        noMatchFound: new VariableUiElement(search.map(s => "Mark this a `"+s+"`")),
-        onNoSearch: new FixedUiElement("Search in "+mappingsRaw.length+" categories"),
-        selectIfSingle: true,
-        searchValue: search
-    }
-)
-
-sp.AttachTo("maindiv")
-
-const lp = new LanguagePicker(["en", "nl"], "")
-
-new Combine([
-    new VariableUiElement(sp.GetValue().map(tf => new FixedUiElement("Selected tags: " + tf.map(tf => tf.asHumanString(false, false, {})).join(", ")))),
-    lp
-]).SetClass("flex flex-col")
-    .AttachTo("extradiv")
+new Combine([valCombine.SetClass("mt-8"), slider]).SetClass("flex flex-row h-14").AttachTo("extradiv")

@@ -1,10 +1,50 @@
 [
   {
+    "path": "cafe.svg",
+    "license": "CC-BY-SA",
+    "authors": [
+      "Robin Julien"
+    ],
+    "sources": [
+      "https://www.ctsteward.com/"
+    ]
+  },
+  {
     "path": "crest.svg",
     "license": "CC0",
     "authors": [
       "Free Wheelies"
     ],
     "sources": []
+  },
+  {
+    "path": "government.svg",
+    "license": "CC-BY-SA",
+    "authors": [
+      "Robin Julien"
+    ],
+    "sources": [
+      "https://www.ctsteward.com/"
+    ]
+  },
+  {
+    "path": "parking.svg",
+    "license": "CC-BY-SA",
+    "authors": [
+      "Robin Julien"
+    ],
+    "sources": [
+      "https://www.ctsteward.com/"
+    ]
+  },
+  {
+    "path": "restaurant.svg",
+    "license": "CC-BY-SA",
+    "authors": [
+      "Robin Julien"
+    ],
+    "sources": [
+      "https://www.ctsteward.com/"
+    ]
   }
 ]

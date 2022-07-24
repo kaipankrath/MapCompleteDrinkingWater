@@ -31,7 +31,12 @@
   "source": {
     "osmTags": {
       "and": [
-        "amenity=drinking_water",
+        {
+		    "or": [
+			    "amenity=drinking_water",
+			    "drinking_water=yes"
+		      ]
+		    }
         "access!=permissive",
         "access!=private"
       ]
